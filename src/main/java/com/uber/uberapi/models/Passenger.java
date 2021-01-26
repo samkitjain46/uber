@@ -19,7 +19,8 @@ public class Passenger extends Auditable {
     private Account account;
 
     private String name;
-
+    @OneToOne
+    private Review avgRating;
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 

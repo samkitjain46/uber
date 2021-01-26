@@ -15,20 +15,28 @@ import java.util.List;
 import java.util.Optional;
 
 public class PassengerController {
-    @Autowired
+    final
     PassengerRepository passengerRepository;
 
-    @Autowired
+    final
     BookingRepository bookingRepository;
 
-    @Autowired
+    final
     DriverMatchingService driverMatchingService;
 
-    @Autowired
+    final
     ReviewRepository reviewRepository;
 
-    @Autowired
+    final
     BookingService bookingService;
+
+    public PassengerController(PassengerRepository passengerRepository, BookingRepository bookingRepository, DriverMatchingService driverMatchingService, ReviewRepository reviewRepository, BookingService bookingService) {
+        this.passengerRepository = passengerRepository;
+        this.bookingRepository = bookingRepository;
+        this.driverMatchingService = driverMatchingService;
+        this.reviewRepository = reviewRepository;
+        this.bookingService = bookingService;
+    }
 
     public Passenger getPassengerFromId(Long passengerId)
     {
@@ -81,7 +89,8 @@ public class PassengerController {
         });
 
         Booking booking = Booking.builder().rideStartOTP(OTP.make(passenger.getPhonenumber())).route(route).
-                passenger(passenger).bookingType(data.getBookingType()).scheduledTime(data.getScheduledTime()).build();
+                passenger(passenger)
+                .bookingType(data.getBookingType()).scheduledTime(data.getScheduledTime()).build();
         bookingService.createBooking(booking);
 
 

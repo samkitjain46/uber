@@ -48,8 +48,8 @@ public class DriverController {
 
     public Booking getDriverBookingFromId(Long bookingId, Driver driver)
     {
-        Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
-        Booking booking = optionalBooking.get();
+
+        Booking booking = getBookingFromId(bookingId);
         if(!booking.getDriver().equals(driver))
         {
             throw new InavlidBookingException("Driver " +driver.getId()+ " has no such booking");
@@ -91,9 +91,15 @@ public class DriverController {
                               @PathVariable(name="bookingId") Long bookingId)
     {
         Driver driver = getDriverFromId(driverId);
-        Booking booking = getDriverBookingFromId(bookingId,driver);
+        Booking booking = getBookingFromId(bookingId);
         bookingService.acceptBooking(driver,booking);
 
+    }
+
+    private Booking getBookingFromId(Long bookingId) {
+        Optional<Booking> booking = bookingRepository.findById(bookingId);
+
+        return booking.get();
     }
 
     @DeleteMapping("{driverId}/bookings/{bookingId}")

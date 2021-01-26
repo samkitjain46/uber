@@ -16,6 +16,8 @@ import java.util.*;
 @Table(name="driver")
 public class Driver extends Auditable{
     @OneToOne
+    private Review avgRating;
+    @OneToOne
     private Account account;
     private Gender gender;
 
@@ -25,6 +27,7 @@ public class Driver extends Auditable{
     private String licenseDetails;
     @Temporal(value = TemporalType.DATE)
     private Date dob;
+
     @Enumerated(value = EnumType.STRING)
     private DriverApprovalStatus approvalStatus;
     @OneToMany (mappedBy = "driver")
