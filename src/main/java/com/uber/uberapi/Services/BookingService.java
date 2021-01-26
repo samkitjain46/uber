@@ -1,6 +1,7 @@
 package com.uber.uberapi.Services;
 
 import com.uber.uberapi.Exceptions.InvalidActionForBookingStateException;
+import com.uber.uberapi.Services.driverMatching.DriverMatchingService;
 import com.uber.uberapi.Services.messagequeue.MessageQueue;
 import com.uber.uberapi.models.*;
 import com.uber.uberapi.Services.notification.NotificationService;

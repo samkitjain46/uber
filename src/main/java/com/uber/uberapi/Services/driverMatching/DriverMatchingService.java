@@ -1,5 +1,11 @@
-package com.uber.uberapi.Services;
+package com.uber.uberapi.Services.driverMatching;
 
+import com.uber.uberapi.Services.Constants;
+import com.uber.uberapi.Services.ETAService;
+import com.uber.uberapi.Services.driverMatching.filters.DriverFilter;
+import com.uber.uberapi.Services.driverMatching.filters.ETABasedFilter;
+import com.uber.uberapi.Services.driverMatching.filters.GenderFilter;
+import com.uber.uberapi.Services.locationtracking.LocationTrackingService;
 import com.uber.uberapi.Services.messagequeue.MQMessage;
 import com.uber.uberapi.Services.messagequeue.MessageQueue;
 import com.uber.uberapi.Services.notification.NotificationService;
@@ -12,27 +18,38 @@ import com.uber.uberapi.repositories.DriverRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.awt.print.Book;
 
 @Service
 public class DriverMatchingService  {
-    @Autowired
-    LocationTrackingService locationTrackingService;
-    @Autowired
-    MessageQueue messageQueue;
-    @Autowired
-    Constants constants;
-    @Autowired
-    NotificationService notificationService;
-    @Autowired
-    BookingRepository bookingRepository;
-    @Autowired
-    DriverRepository driverRepository;
+    final MessageQueue messageQueue;
+    final Constants constants;
+    final NotificationService notificationService;
+    final BookingRepository bookingRepository;
+    final DriverRepository driverRepository;
+    final LocationTrackingService locationTrackingService;
+    final ETAService etaService;
+
+    final List<DriverFilter> driverFilters = new ArrayList<>();
+
+
+    public DriverMatchingService(LocationTrackingService locationTrackingService, MessageQueue messageQueue, Constants constants, NotificationService notificationService, BookingRepository bookingRepository, DriverRepository driverRepository, ETAService etaService) {
+        this.locationTrackingService = locationTrackingService;
+        this.messageQueue = messageQueue;
+        this.constants = constants;
+        this.notificationService = notificationService;
+        this.bookingRepository = bookingRepository;
+        this.driverRepository = driverRepository;
+        this.etaService = etaService;
+        driverFilters.add(new ETABasedFilter(this.etaService,constants));
+        driverFilters.add(new GenderFilter(constants));
+
+
+    }
+
     @Scheduled(fixedRate = 1000)
     public void consumer(){
         MQMessage m = messageQueue.consumeMessage(constants.getDriverMatchingTopicName());
@@ -55,6 +72,7 @@ public class DriverMatchingService  {
         }
         notificationService.notify(booking.getPassenger().getPhonenumber(),"contacting cabs around you");
         //filter the drivers somehow
+        drivers=filterDrivers(drivers,booking);
         if(drivers.size()==0)
         {
             notificationService.notify(booking.getPassenger().getPhonenumber(),"no cabs near you");
@@ -65,6 +83,15 @@ public class DriverMatchingService  {
         });
         bookingRepository.save(booking);
 
+
+    }
+
+    private List<Driver> filterDrivers(List<Driver> drivers, Booking booking) {
+        for(DriverFilter filter:driverFilters)
+        {
+           drivers= filter.apply(drivers,booking);
+        }
+        return drivers;
 
     }
 

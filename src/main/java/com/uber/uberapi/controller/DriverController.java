@@ -4,7 +4,7 @@ import com.uber.uberapi.Exceptions.InavlidBookingException;
 
 import com.uber.uberapi.Services.BookingService;
 import com.uber.uberapi.Services.Constants;
-import com.uber.uberapi.Services.DriverMatchingService;
+import com.uber.uberapi.Services.driverMatching.DriverMatchingService;
 import com.uber.uberapi.models.*;
 import com.uber.uberapi.repositories.BookingRepository;
 import com.uber.uberapi.repositories.DriverRepository;
@@ -42,6 +42,7 @@ public class DriverController {
     public Driver getDriverFromId(Long driverId)
     {
         Optional<Driver> driver = driverRepository.findById(driverId);
+
         return driver.get();
     }
 

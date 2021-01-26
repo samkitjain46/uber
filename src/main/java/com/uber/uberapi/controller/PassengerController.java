@@ -2,7 +2,7 @@ package com.uber.uberapi.controller;
 
 import com.uber.uberapi.Exceptions.InavlidBookingException;
 import com.uber.uberapi.Services.BookingService;
-import com.uber.uberapi.Services.DriverMatchingService;
+import com.uber.uberapi.Services.driverMatching.DriverMatchingService;
 import com.uber.uberapi.models.*;
 import com.uber.uberapi.repositories.BookingRepository;
 import com.uber.uberapi.repositories.PassengerRepository;
