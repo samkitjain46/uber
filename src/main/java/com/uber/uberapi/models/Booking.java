@@ -93,6 +93,8 @@ public class Booking extends  Auditable{
         {
             throw new InvalidOTPException();
         }
+        passenger.setActiveBooking(this);
+        startTime= new Date();
         bookingStatus = BookingStatus.IN_RIDE;
     }
 
@@ -103,6 +105,8 @@ public class Booking extends  Auditable{
         }
         driver.setActiveBooking(null);
         driverRepository.save(driver);
+        endTIme = new Date();
+        passenger.setActiveBooking(null);
         bookingStatus=BookingStatus.COMPLETED;
     }
 

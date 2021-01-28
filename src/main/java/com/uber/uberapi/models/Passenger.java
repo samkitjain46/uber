@@ -23,6 +23,8 @@ public class Passenger extends Auditable {
     private Review avgRating;
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
+    @OneToOne
+    private  Booking activeBooking = null;
 
     @OneToMany(mappedBy = "passenger")
     private List<Booking> bookings = new ArrayList<>();
