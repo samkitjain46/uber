@@ -2,10 +2,7 @@ package com.uber.uberapi.models;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +19,9 @@ public class Account extends Auditable{
 
     private String password;
 
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Singular
     private List<Role> roles = new ArrayList<>();
     //private List<Location> route = new ArrayList<>();
 }

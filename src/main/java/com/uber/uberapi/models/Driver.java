@@ -14,14 +14,14 @@ import java.util.*;
 @AllArgsConstructor
 @Builder
 @Table(name="driver")
-public class Driver extends Auditable{
+public class Driver extends Auditable {
     @OneToOne
     private Review avgRating;
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
     private Gender gender;
 
-    @OneToOne(mappedBy = "driver",cascade =CascadeType.ALL)
+    @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL)
     private Car car;
 
     private String licenseDetails;
@@ -30,7 +30,7 @@ public class Driver extends Auditable{
 
     @Enumerated(value = EnumType.STRING)
     private DriverApprovalStatus approvalStatus;
-    @OneToMany (mappedBy = "driver")
+    @OneToMany(mappedBy = "driver")
     private List<Booking> bookings;
     private String phoneNumber;
 
@@ -43,28 +43,25 @@ public class Driver extends Auditable{
     private Location lastKnownLocation;
     @OneToOne
     private Location home;
+    private String name;
 
     @OneToOne
-    private Booking activeBooking=null;
+    private Booking activeBooking = null;
 
     public void setAvailable(Boolean available) {
-        if(available && !getApprovalStatus().equals(DriverApprovalStatus.APPROVED))
-        {
+        if (available && !getApprovalStatus().equals(DriverApprovalStatus.APPROVED)) {
             throw new UnapprovedDriverException("Driver Approval Pending or Denied" + getId());
         }
-        isAvailable=available;
+        isAvailable = available;
     }
 
     public boolean canAcceptBooking(int maxWaitTimeForPreviousRide) {
-        if(isAvailable && activeBooking==null )
-        {
+        if (isAvailable && activeBooking == null) {
             return true;
         }
         //check if current ride can be completed in 10  mins
         return activeBooking.getExpectedCompletionTime().before(DateUtils.addMinutes(new Date(), maxWaitTimeForPreviousRide));
     }
-
-    public Collection<Booking> getAcceptableBookings(){
-
-    }
 }
+
+

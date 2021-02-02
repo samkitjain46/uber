@@ -17,7 +17,7 @@ import java.util.List;
 public class Passenger extends Auditable {
     @OneToOne(cascade = CascadeType.ALL)
     private Account account;
-
+    private String phoneNumber;
     private String name;
     @OneToOne
     private Review avgRating;
