@@ -17,11 +17,11 @@ import java.util.*;
 public class Driver extends Auditable{
     @OneToOne
     private Review avgRating;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Account account;
     private Gender gender;
 
-    @OneToOne(mappedBy = "driver")
+    @OneToOne(mappedBy = "driver",cascade =CascadeType.ALL)
     private Car car;
 
     private String licenseDetails;
